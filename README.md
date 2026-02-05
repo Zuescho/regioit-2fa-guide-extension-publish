@@ -1,30 +1,39 @@
-# 2FA Guide Extension - Deployment Package
+# 2FA Einrichtungshilfe - Deployment
 
-This repository contains the packed Edge extension for enterprise deployment.
+Dieses Repository enthält die gepackte Edge-Erweiterung für die Unternehmensverteilung.
 
-## Files
+## Dateien
 
-| File | Description |
-|------|-------------|
-| `2fa-guide.crx` | Packed extension (auto-generated) |
-| `updates.xml` | Update manifest for Edge policy |
-| `extension-id.txt` | Extension ID reference |
-| `Deploy-2FAExtension.ps1` | PowerShell deployment script |
+| Datei | Beschreibung |
+|-------|-------------|
+| `2fa-guide.crx` | Gepackte Extension (automatisch generiert) |
+| `updates.xml` | Update-Manifest für Edge-Policy |
+| `extension-id.txt` | Extension-ID als Referenz |
 
-## Deploy via PowerShell (SCCM/GPO)
+## Installation auf Zielrechnern
 
-```powershell
-.\Deploy-2FAExtension.ps1 -ExtensionId "<id from extension-id.txt>" -UpdateUrl "https://raw.githubusercontent.com/OWNER/regioit-2fa-guide-extension-publish/main/updates.xml"
+Die Extension wird per Registry-Policy force-installiert. Folgenden Schlüssel setzen (als Administrator):
+
+```
+HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallForcelist
 ```
 
-This sets an Edge enterprise policy to force-install the extension. Requires admin privileges.
-
-## Uninstall
-
-```powershell
-.\Deploy-2FAExtension.ps1 -ExtensionId "<id>" -Uninstall
+Neuer Wert (String):
+```
+<Extension-ID>;<Update-URL>
 ```
 
-## How Updates Work
+Beispiel:
+```
+kjglglbcjfigdjkckcfpdaeilodhhdlp;https://raw.githubusercontent.com/Zuescho/regioit-2fa-guide-extension-publish/main/updates.xml
+```
 
-When a new version is pushed to this repository, Edge will automatically detect the update via `updates.xml` and install the new CRX.
+Nach einem Neustart von Edge wird die Extension automatisch installiert (Enterprise Policy, Benutzer kann sie nicht entfernen).
+
+## Updates
+
+Wenn eine neue Version in dieses Repository gepusht wird, erkennt Edge das Update automatisch über `updates.xml` und installiert die neue CRX-Datei.
+
+## Deinstallation
+
+Den Registry-Eintrag unter `ExtensionInstallForcelist` entfernen und Edge neu starten.
